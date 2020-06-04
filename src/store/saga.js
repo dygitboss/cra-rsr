@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { createRequestInstance, watchRequests } from 'redux-saga-requests';
+import { all } from 'redux-saga/effects';
+import { handleRequests } from 'redux-saga-requests';
 import { createDriver } from 'redux-saga-requests-axios';
 
-import config from 'config';
+import config from '../config';
 
 function onRequest(request) {
   // intercept a request here
@@ -10,10 +11,12 @@ function onRequest(request) {
   return request;
 }
 
+export const { requestsReducer, requestsSagas, requestsMiddleware } = handleRequests({
+  driver: createDriver(axios),
+  promisify: true,
+  onRequest,
+});
+
 export default function* rootSaga() {
-  yield createRequestInstance({
-    onRequest,
-    driver: createDriver(axios),
-  });
-  yield watchRequests();
+  yield all([...requestsSagas]);
 }
