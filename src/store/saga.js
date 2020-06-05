@@ -13,7 +13,6 @@ function onRequest(request) {
 
 export const { requestsReducer, requestsSagas, requestsMiddleware } = handleRequests({
   driver: createDriver(axios),
-  promisify: true,
   onRequest,
 });
 
