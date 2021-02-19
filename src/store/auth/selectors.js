@@ -1,3 +1,2 @@
-export const isAuthorizedSelector = (state) => state.auth.isAuthorized;
-export const userSelector = (state) => state.auth.user;
-export const isAuthLoading = (state) => state.auth.loading;
+// eslint-disable-next-line import/prefer-default-export
+export const authorizedUserSelector = (state) => [state.auth.user, state.auth.loading];

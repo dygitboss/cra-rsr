@@ -1,35 +1,49 @@
-import createSagaMiddleware from 'redux-saga';
+import axios from 'axios';
 import thunk from 'redux-thunk';
-import { middleware as sagaThunkMiddleware } from 'redux-saga-thunk';
-import { applyMiddleware, createStore, combineReducers } from 'redux';
-import { createLogger } from 'redux-logger';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { createLogger } from 'redux-logger';
+import { handleRequests } from '@redux-requests/core';
+import { createDriver } from '@redux-requests/axios';
 
-import saga, { requestsReducer, requestsMiddleware } from './saga';
+import config from 'config';
+import ROUTES from 'config/routes';
+import history from 'config/history';
 import auth from './auth/reducer';
+import todo from './todo/reducer';
 
-const loggerMiddleware = createLogger();
-const sagaMiddleware = createSagaMiddleware();
+export const instance = axios.create({
+  baseURL: config.api.url,
+  withCredentials: true,
+});
+
+const { requestsReducer: requests, requestsMiddleware } = handleRequests({
+  driver: createDriver(instance),
+  onError: async (e) => {
+    if (e.response && e.response.status === 401) {
+      history.replace(ROUTES.LOGIN);
+    }
+    throw e;
+  },
+});
 
 const rootReducer = combineReducers({
-  requests: requestsReducer, auth,
+  auth,
+  todo,
+  requests,
 });
 
 const middlewares = [
   ...requestsMiddleware,
   thunk,
-  sagaThunkMiddleware,
-  sagaMiddleware,
 ];
 
-// Disable Logger at server side.
-// eslint-disable-next-line no-undef
-if (process.browser && process.env.NODE_ENV !== 'production') {
-  middlewares.push(loggerMiddleware);
-}
+if (config.general.logging) middlewares.push(createLogger());
 
-const store = createStore(rootReducer, undefined, composeWithDevTools(applyMiddleware(...middlewares)));
+export const storeBuilder = (initState) => createStore(
+  rootReducer,
+  initState,
+  config.general.logging ? composeWithDevTools(applyMiddleware(...middlewares)) : applyMiddleware(...middlewares),
+);
 
-sagaMiddleware.run(() => saga(store.dispatch, store.getState));
-
-export default store;
+export default storeBuilder();

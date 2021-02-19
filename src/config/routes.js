@@ -1,6 +1,7 @@
-const Routes = {
+const ROUTES = {
+  LOGIN: '/login',
+  REGISTER: '/register',
   HOME: '/',
-  FRAME: '/frame_tester',
 };
 
-export default Routes;
+export default ROUTES;

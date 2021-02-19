@@ -1,0 +1,34 @@
+name: Lint / Type Check / Test
+
+on:
+  push:
+    branches-ignore:
+      - 'master'
+      - 'develop'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Yarn Install
+      run: |
+        yarn install
+    - name: Unit Tests
+      run: |
+        yarn test:ci
+    - name: Lint
+      run: |
+        yarn lint
+      env:
+        CI: true

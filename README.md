@@ -1,10 +1,10 @@
-## CRA + Redux + Saga + Saga Requests implementation
+## Create React App + Redux + Redux Requests boilerplate
 This is a basic example of CRA application with some useful tools:
 
 - `redux` for global store. React Context seems much more difficult to use rather that redux
 - `redux-saga` for managing redux actions
 - `redux-saga-requests` is for managing 'request' actions to convert them into API call and dispatch three possible
- variations of dispatched request action: <br/>
+  variations of processed request action: <br/>
   -- `SUCCESS` - successful request <br/>
   -- `ERROR` - failed request <br/>
   -- `ABORT` - canceled request
@@ -22,7 +22,7 @@ You can find node and npm versions in `package.json`
 
 ## How to run application?
 
-1. Development: 
+1. Development:
     - `yarn start`
 2. Production:
     - `yarn build` to build a production app and serve it with any HTTP server you like
