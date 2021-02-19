@@ -10,7 +10,7 @@ import config from 'config';
 import ROUTES from 'config/routes';
 import history from 'config/history';
 import auth from './auth/reducer';
-import todo from './todo/reducer';
+import todos from './todos/reducer';
 
 export const instance = axios.create({
   baseURL: config.api.url,
@@ -29,7 +29,7 @@ const { requestsReducer: requests, requestsMiddleware } = handleRequests({
 
 const rootReducer = combineReducers({
   auth,
-  todo,
+  todos,
   requests,
 });
 

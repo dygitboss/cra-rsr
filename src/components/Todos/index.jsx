@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'antd';
 
 import { useFilters, usePagination } from '../../utils/hooks';
-import { fetchTodos } from '../../store/todo/actions';
-import { todosSelector } from '../../store/todo/selectors';
+import { fetchTodos } from '../../store/todos/actions';
+import { todosSelector } from '../../store/todos/selectors';
 
 const COLUMNS = [
   {
