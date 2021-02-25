@@ -11,15 +11,15 @@ import styles from './Login.module.scss';
 import { authorize } from '../../store/auth/actions';
 
 const Login = () => {
-  const router = useHistory();
+  const history = useHistory();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   const submit = useCallback(async ({ email, password }) => {
     const { data, error } = await dispatch(authorize(email, password));
-    if (data) await router.push(ROUTES.HOME);
+    if (data) history.push(ROUTES.HOME);
     if (error) form.setFields([{ name: 'password', errors: ['Invalid credentials'] }]);
-  }, [dispatch, router, form]);
+  }, [dispatch, history, form]);
 
   return (
     <Row className={styles.container}>

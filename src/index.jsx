@@ -11,7 +11,7 @@ import reportWebVitals from './reportWebVitals';
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <App testId='root' />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'),

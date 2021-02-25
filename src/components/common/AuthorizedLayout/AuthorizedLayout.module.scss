@@ -1,0 +1,30 @@
+.avatarWrap {
+  cursor: pointer;
+  transition: .2s all;
+
+  span {
+    margin: 0 5px;
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, .025);
+  }
+}
+
+.background {
+  background-color: #fff;
+}
+
+.header {
+  height: 48px;
+  line-height: 48px;
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 15px;
+}
+
+.container {
+  padding: 20px;
+  min-height: 100vh;
+}

@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table } from 'antd';
+import { DeleteOutlined, CheckCircleOutlined, MinusOutlined } from '@ant-design/icons';
+import {
+  Table, Button, Popconfirm, message,
+} from 'antd';
 
 import { useFilters, usePagination } from '../../utils/hooks';
-import { fetchTodos } from '../../store/todos/actions';
+import { deleteTodo, fetchTodos, updateTodo } from '../../store/todos/actions';
 import { todosSelector } from '../../store/todos/selectors';
 
 const COLUMNS = [
@@ -14,6 +17,26 @@ const COLUMNS = [
   {
     title: 'Completed',
     dataIndex: 'completed',
+    render: (v) => (v ? (<CheckCircleOutlined />) : <MinusOutlined />),
+  },
+  {
+    title: 'Actions',
+    render: (v, record) => (
+      <>
+        { !record.completed && (
+          <Popconfirm title='Sure to complete?' onConfirm={() => record.handleComplete(record.id)}>
+            <Button type='link' icon={<CheckCircleOutlined />}>
+              Complete
+            </Button>
+          </Popconfirm>
+        ) }
+        <Popconfirm title='Sure to delete?' onConfirm={() => record.handleDelete(record.id)}>
+          <Button type='link' danger icon={<DeleteOutlined />}>
+            Delete
+          </Button>
+        </Popconfirm>
+      </>
+    ),
   },
 ];
 
@@ -23,16 +46,43 @@ const Todos = () => {
   const [pagination, paginationOptions] = usePagination();
   const [filters, sorting, filterOptions] = useFilters(COLUMNS, {});
 
-  useEffect(() => {
+  const fetchData = useCallback(() => {
     dispatch(fetchTodos({
       ...pagination, filters, sorting,
     }));
-  }, [dispatch, pagination, filters, sorting]);
+  }, [dispatch, filters, pagination, sorting]);
+
+  const handleComplete = useCallback(async (id) => {
+    const { data, error } = await dispatch(updateTodo(id, { completed: 1 }));
+    if (data) {
+      message.success(data);
+      fetchData();
+    }
+    if (error) message.error('Unable to delete todo');
+  }, [dispatch, fetchData]);
+
+  const handleDelete = useCallback(async (id) => {
+    const { data, error } = await dispatch(deleteTodo(id));
+    if (data) {
+      message.success(data);
+      fetchData();
+    }
+    if (error) message.error('Unable to delete todo');
+  }, [dispatch, fetchData]);
+
+  const dataSource = useMemo(
+    () => todos.map((item) => ({ ...item, handleDelete, handleComplete })),
+    [todos, handleDelete, handleComplete],
+  );
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <Table
       loading={loading}
-      dataSource={todos}
+      dataSource={dataSource}
       pagination={{
         total,
         ...paginationOptions,

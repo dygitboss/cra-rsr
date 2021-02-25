@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '../../utils/test';
 import App from './App';
+import 'antd/dist/antd.css';
 
-test('renders learn react link', () => {
+test('mounts to the DOM', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const layout = document.querySelector('.ant-layout');
+  expect(layout).toBeInTheDocument();
 });

@@ -8,17 +8,18 @@ import { useHistory } from 'react-router-dom';
 
 import styles from './Register.module.scss';
 import { authorize } from '../../store/auth/actions';
+import ROUTES from '../../config/routes';
 
 const Register = () => {
   const dispatch = useDispatch();
-  const router = useHistory();
+  const history = useHistory();
   const [form] = Form.useForm();
 
   const submit = useCallback(async ({ email, password }) => {
     const { data, error } = await dispatch(authorize(email, password));
-    if (data) await router.push('/users');
+    if (data) history.push(ROUTES.HOME);
     if (error) form.setFields([{ name: 'password', errors: ['Invalid credentials'] }]);
-  }, [dispatch, router, form]);
+  }, [dispatch, history, form]);
 
   return (
     <Row className={styles.container}>
