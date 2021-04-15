@@ -6,8 +6,8 @@ import {
 } from '../mutations';
 
 const initialState = {
-  ...ENTITY_STATE_STANDARD,
-  item: { ...SINGLE_ENTITY_STATE_STANDARD },
+  ...ENTITY_STATE_STANDARD(),
+  item: SINGLE_ENTITY_STATE_STANDARD(),
 };
 
 export const reducer = (state = initialState, action) => {
